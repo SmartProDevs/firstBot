@@ -500,54 +500,59 @@ def contact_handler(update, context):
 
 def location_handler(update, context):
     db_user = db.get_user_by_chat_id(update.message.from_user.id)
-
-
-
-
     location = update.message.location
-    payment_type = context.user_data.get("payment_type", None)
-    db.create_order(db_user['id'], context.user_data.get("carts", {}), payment_type, location)
-    db_order = db.get_user_orders(db_user['id'])
-    db_products = db.get_order_products(db_order['id'])
-    print(db_products)
-    context.user_data['payment_type'] = None
-    context.user_data['carts'] = {}
+    # payment_type = context.user_data.get("payment_type", None)
+    # db.create_order(db_user['id'], context.user_data.get("carts", {}), payment_type, location)
+    # db_order = db.get_user_orders(db_user['id'])
+    # db_products = db.get_order_products(db_order['id'])
+    # print(db_products)
+    # context.user_data['payment_type'] = None
 
-    update.message.reply_text(
-        text=globals.SENDED_TO_ADMIN[db_user['lang_id']]
-    )
+    # context.user_data['carts'] = {}
+    #
+    # update.message.reply_text(
+    #     text=globals.SENDED_TO_ADMIN[db_user['lang_id']]
+    # )
+    #
 
-    ###############################
+    categories = db.get_categories_by_parent()
+    buttons = methods.send_category_buttons(categories=categories, lang_id=db_user["lang_id"])
 
-    #############################
+    if context.user_data.get("carts", {}):
+        carts = context.user_data.get("carts")
+        text = "\n"
+        lang_code = globals.LANGUAGE_CODE[db_user['lang_id']]
+        total_price = 0
+        for cart, val in carts.items():
+            product = db.get_product_for_cart(int(cart))
+            text += f"{val} x {product[f'cat_name_{lang_code}']} {product[f'name_{lang_code}']}\n"
+            total_price += product['price'] * val
+
+        text += f"\nJami: {total_price} so'm"
 
     context.bot.send_message(
             chat_id=697775505,
-            text=f"<b>{db_user['first_name']} {db_user['last_name']}</b>\n\nAloqa uchun"
-                 f":{db_user['phone_number']}",
+            text=f"<b>Yangi buyurtma:</b>\n\n"
+                 f"👤 <b>Ism-familiya:</b> {db_user['first_name']} {db_user['last_name']}\n"
+                 f"📞 <b>Telefon raqam:</b> {db_user['phone_number']} \n\n"
+                 f"📥 <b>Buyurtma:</b> \n"
+                 f"{text}",
         parse_mode="HTML",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton(text="tasdiqlash",callback_data=f'ok_{update.message.chat_id}')],
+                [InlineKeyboardButton(text="Tasdiqlash",callback_data=f'ok_{update.message.chat_id}')],
                 [InlineKeyboardButton(text="Inkor qilish",callback_data=f'ng_{update.message.chat_id}')],
             ])
         )
-    methods.send_main_menu(context, update.message.from_user.id, db_user['lang_id'])
-
-
     context.bot.send_location(
         chat_id=697775505,
         latitude=float(location.latitude),
         longitude=float(location.longitude)
     )
-    context.bot.send_message(
-            chat_id=697775505,
-            text=f"________________end of the order__________________",
-        parse_mode="HTML",
+    methods.send_main_menu(context, update.message.from_user.id, db_user['lang_id'])
 
-        )
 
 def main():
-    updater = Updater("1858866656:AAFAD32Jx01qtEsMlh7charL1KnUf31XirM")
+    updater = Updater("1699599225:AAGJ-jxsE9kC2f_uJOnJpyXBPxMRv_FgW1w")
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler('start', start_handler))
