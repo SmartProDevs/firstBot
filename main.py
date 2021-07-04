@@ -446,6 +446,9 @@ def inline_handler(update, context):
                     total_price += product['price'] * val
 
                 text += f"\nJami: {total_price}"
+
+                context.user_data.get('cart_text',text)
+
                 buttons.append([InlineKeyboardButton(text="Savatchaga", callback_data="cart")])
 
             else:
@@ -500,29 +503,27 @@ def contact_handler(update, context):
 def location_handler(update, context):
     db_user = db.get_user_by_chat_id(update.message.from_user.id)
 
-
-
-
     location = update.message.location
     payment_type = context.user_data.get("payment_type", None)
     db.create_order(db_user['id'], context.user_data.get("carts", {}), payment_type, location)
     db_order = db.get_user_orders(db_user['id'])
-    db_products = db.get_order_products(db_order['id'])
-    print(db_products)
+    print('db_order:',db_order,"\n")
+    db_products = db.get_order_products(db_order[-1]['id'])
+    print('db_products',db_products,'\n')
+    print('carts= ',context.user_data['carts'])
     context.user_data['payment_type'] = None
+
+
     context.user_data['carts'] = {}
 
     update.message.reply_text(
         text=globals.SENDED_TO_ADMIN[db_user['lang_id']]
     )
 
-    ###############################
-
-    #############################
-
     context.bot.send_message(
-            chat_id=697775505,
-            text=f"<b>{db_user['first_name']} {db_user['last_name']}</b>\n\nAloqa uchun"
+            chat_id=392330197,
+            text=f"<b>{db_user['first_name']} {db_user['last_name']}</b>\n{context.user_data['cart_text']}\nAloqa "
+                 f"uchun"
                  f":{db_user['phone_number']}",
         parse_mode="HTML",
             reply_markup=InlineKeyboardMarkup([
