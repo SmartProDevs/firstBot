@@ -503,7 +503,6 @@ def contact_handler(update, context):
 
 def location_handler(update, context):
     db_user = db.get_user_by_chat_id(update.message.from_user.id)
-<<<<<<< HEAD
     location = update.message.location
     # payment_type = context.user_data.get("payment_type", None)
     # db.create_order(db_user['id'], context.user_data.get("carts", {}), payment_type, location)
@@ -541,7 +540,6 @@ def location_handler(update, context):
                  f"📞 <b>Telefon raqam:</b> {db_user['phone_number']} \n\n"
                  f"📥 <b>Buyurtma:</b> \n"
                  f"{text}",
-=======
 
     location = update.message.location
     payment_type = context.user_data.get("payment_type", None)
@@ -565,13 +563,13 @@ def location_handler(update, context):
             text=f"<b>{db_user['first_name']} {db_user['last_name']}</b>\n{context.user_data['cart_text']}\nAloqa "
                  f"uchun"
                  f":{db_user['phone_number']}",
->>>>>>> 331130e06e3f482fbd367b304b7fdb41f60240af
         parse_mode="HTML",
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton(text="Tasdiqlash",callback_data=f'ok_{update.message.chat_id}')],
                 [InlineKeyboardButton(text="Inkor qilish",callback_data=f'ng_{update.message.chat_id}')],
             ])
         )
+
     context.bot.send_location(
         chat_id=697775505,
         latitude=float(location.latitude),
