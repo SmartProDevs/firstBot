@@ -2,9 +2,7 @@ from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageH
 from telegram import (
     InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ChatAction
 )
-<<<<<<< HEAD
-# db = Database("foods.db")
-=======
+
 from database import Database
 import globals
 import methods
@@ -564,4 +562,3 @@ def main():
 
 if __name__ == '__main__':
     main()
->>>>>>> 99b8d3e0219c44a4b8c5d1c1ea9cf0b900c4357e
