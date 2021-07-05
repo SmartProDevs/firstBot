@@ -206,7 +206,7 @@ def message_handler(update, context):
 
             if context.user_data.get("carts", {}):
                 carts = context.user_data.get("carts")
-                text = "Savatchada:\n\n"
+                text = f"{globals.AT_KORZINKA[db_user['lang_id']]}:\n\n"
                 lang_code = globals.LANGUAGE_CODE[db_user['lang_id']]
                 total_price = 0
                 for cart, val in carts.items():
@@ -214,8 +214,8 @@ def message_handler(update, context):
                     text += f"{val} x {product[f'cat_name_{lang_code}']} {product[f'name_{lang_code}']}\n"
                     total_price += product['price'] * val
 
-                text += f"\nJami: {total_price}"
-                buttons.append([InlineKeyboardButton(text="Savatchaga", callback_data="cart")])
+                text += f"\n{globals.ALL[db_user['lang_id']]}: {total_price}"
+                buttons.append([InlineKeyboardButton(text=globals.BTN_KORZINKA[db_user['lang_id']], callback_data="cart")])
 
             else:
                 text = globals.TEXT_ORDER[db_user['lang_id']]
@@ -230,14 +230,14 @@ def message_handler(update, context):
             orders = db.get_user_orders(db_user['id'])
             lang_code = globals.LANGUAGE_CODE[db_user['lang_id']]
             for order in orders:
-                text = f"Buyurtma : #{order['id']}\n\n"
+                text = f"{globals.ZAKAZ[db_user['lang_id']]} : #{order['id']}\n\n"
                 total_price = 0
                 products = db.get_order_products(order['id'])
                 for product in products:
                     total_price += product['product_price'] * product['amount']
-                    text += f"{product['amount']} x {product[f'product_name_{lang_code}']} ({product['product_price']}) so'm\n"
+                    text += f"{product['amount']} x {product[f'product_name_{lang_code}']} ({product['product_price']}) {globals.SUM[db_user['lang_id']]}\n"
 
-                text += f"\nUmumiy narx: {total_price}"
+                text += f"\n{globals.BTN_KORZINKA[db_user['lang_id']]}: {total_price}"
                 update.message.reply_text(text=text)
 
     else:
@@ -285,7 +285,7 @@ def inline_handler(update, context):
                     categories = db.get_categories_by_parent()
                     buttons = methods.send_category_buttons(categories=categories, lang_id=db_user["lang_id"])
 
-                    text = "Savatchada:\n\n"
+                    text = f"{globals.AT_KORZINKA[db_user['lang_id']]}:\n\n"
                     lang_code = globals.LANGUAGE_CODE[db_user['lang_id']]
                     total_price = 0
                     for cart, val in carts.items():
@@ -293,8 +293,8 @@ def inline_handler(update, context):
                         text += f"{val} x {product[f'cat_name_{lang_code}']} {product[f'name_{lang_code}']}\n"
                         total_price += product['price'] * val
 
-                    text += f"\nJami: {total_price}"
-                    buttons.append([InlineKeyboardButton(text="Savatchaga", callback_data="cart")])
+                    text += f"\n{globals.ALL[db_user['lang_id']]}: {total_price}"
+                    buttons.append([InlineKeyboardButton(text=f"{globals.BTN_KORZINKA[db_user['lang_id']]}", callback_data="cart")])
 
                     query.message.reply_text(
                         text=text,
@@ -438,7 +438,7 @@ def inline_handler(update, context):
 
             if context.user_data.get("carts", {}):
                 carts = context.user_data.get("carts")
-                text = "Savatchada:\n\n"
+                text = f"{globals.AT_KORZINKA[db_user['lang_id']]}:\n\n"
                 lang_code = globals.LANGUAGE_CODE[db_user['lang_id']]
                 total_price = 0
                 for cart, val in carts.items():
@@ -446,11 +446,11 @@ def inline_handler(update, context):
                     text += f"{val} x {product[f'cat_name_{lang_code}']} {product[f'name_{lang_code}']}\n"
                     total_price += product['price'] * val
 
-                text += f"\nJami: {total_price}"
+                text += f"\n{globals.ALL[db_user['lang_id']]}: {total_price}"
 
                 context.user_data.get('cart_text',text)
 
-                buttons.append([InlineKeyboardButton(text="Savatchaga", callback_data="cart")])
+                buttons.append([InlineKeyboardButton(text=f"{globals.BTN_KORZINKA}", callback_data="cart")])
 
             else:
                 text = globals.TEXT_ORDER[db_user['lang_id']]
@@ -532,7 +532,7 @@ def location_handler(update, context):
             text += f"{val} x {product[f'cat_name_{lang_code}']} {product[f'name_{lang_code}']}\n"
             total_price += product['price'] * val
 
-        text += f"\nJami: {total_price} so'm"
+        text += f"\n{globals.ALL[db_user['lang_id']]}: {total_price} {globals.SUM[db_user['lang_id']]}"
 
     context.bot.send_message(
         chat_id=697775505,

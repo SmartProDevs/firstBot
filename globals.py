@@ -48,6 +48,10 @@ TEXT_ORDER = {
     1: "Kategoriyalardan birini tanlang:",
     2: "Выбери одну из категорий:"
 }
+BTN_KORZINKA = {
+    1: "🛍 Xarid qilish",
+    21: "🛍 Покупка товаров",
+}
 BTN_MY_ORDERS = {
     1:"🛍 Buyurtmalarim",
     2:"🛍 Мои заказы"
@@ -71,4 +75,24 @@ TEXT_PRODUCT_PRICE = {
 TEXT_PRODUCT_DESC = {
     1: "Tarkibi:",
     2: "Состав:"
+}
+
+AT_KORZINKA = {
+    1: "Savatchada",
+    2: "В корзине"
+}
+
+ALL = {
+    1: "Jami",
+    2: "Все"
+}
+
+ZAKAZ = {
+    1: "Buyurtma",
+    2: "Заказ"
+}
+
+SUM = {
+    1: "so'm",
+    2: "сум"
 }
