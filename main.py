@@ -549,10 +549,10 @@ def contact_handler(update, context):
 def location_handler(update, context):
     db_user = db.get_user_by_chat_id(update.message.from_user.id)
     location = update.message.location
-
+    payment_type = context.user_data.get("payment_type", None)
+    db.create_order(db_user['id'], context.user_data.get("carts", {}), payment_type, location)
     categories = db.get_categories_by_parent()
     buttons = methods.send_category_buttons(categories=categories, lang_id=db_user["lang_id"])
-    location = update.message.location
 
     if context.user_data.get("carts", {}):
         carts = context.user_data.get("carts")
