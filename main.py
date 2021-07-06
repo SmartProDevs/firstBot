@@ -260,18 +260,30 @@ def message_handler(update, context):
             )
 
         elif message == globals.BTN_SETTINGS[db_user['lang_id']]:
-            # buttons = [
-            #     [KeyboardButton(text=globals.BTN_LANG_UZ), KeyboardButton(text=globals.BTN_LANG_RU)]
-            # ]
-            # update.message.reply_text(
-            #     text=globals.CHOOSE_LANG,
-            #     reply_markup=ReplyKeyboardMarkup(
-            #         keyboard=buttons,
-            #         resize_keyboard=True
-            #     )
-            # )
-            # context.user_data["state"] = globals.STATES["reg"]
+            user = update.message.from_user
+            db_user = db.get_user_by_chat_id(user.id)
+            buttons = [
+                [KeyboardButton(text=globals.BTN_LANG_UZ), KeyboardButton(text=globals.BTN_LANG_RU)]
+            ]
+            update.message.reply_text(
+                text=globals.CHOOSE_LANG,
+                reply_markup=ReplyKeyboardMarkup(
+                    keyboard=buttons,
+                    resize_keyboard=True
+                )
+            )
+            context.user_data["state"] = globals.STATES["reg"]
 
+            if message == globals.BTN_LANG_UZ:
+                db.update_user_data(db_user['chat_id'], "lang_id", 1)
+
+            elif message == globals.BTN_LANG_RU:
+                db.update_user_data(db_user['chat_id'], "lang_id", 2)
+
+            else:
+                update.message.reply_text(
+                    text=globals.TEXT_LANG_WARNING
+                )
 
     else:
         update.message.reply_text("Salom")

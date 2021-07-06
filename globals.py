@@ -98,11 +98,11 @@ SUM = {
 }
 
 ABOUT_COMPANY = {
-    1: "Biz <b>Delx Group</b>miz! "
+    1: "Biz <b>DelX Group</b>miz! "
          "\n\nBirgalikda biznesingizni rivojlantiramiz va uni "
          "zamonaviy uslubda ommaga taqdim qilamiz!\n\n"
          "<b>BIZ SIZ HAQINGIZDA QAYG'URAMIZ!!!</b>",
-    2: "Мы <b>Delx Group</b>!"
+    2: "Мы <b>DelX Group</b>!"
        "\n\nМы будем развивать ваш бизнес вместе"
        "и представляем публике в современном стиле!\n\n"
        "<b>МЫ ЗАБОТИМСЯ О ВАС !!!</b>"
