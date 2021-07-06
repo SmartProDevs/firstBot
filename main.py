@@ -9,6 +9,7 @@ import methods
 
 db = Database("food-db.db")
 
+ADMIN_ID = 697775505
 
 def check(update, context):
     user = update.message.from_user
@@ -156,6 +157,7 @@ def start_handler(update, context):
 
 @check_data_decorator
 def message_handler(update, context):
+    global text
     message = update.message.text
     user = update.message.from_user
     state = context.user_data.get("state", 0)
@@ -227,18 +229,49 @@ def message_handler(update, context):
             )
 
         elif message == globals.BTN_MY_ORDERS[db_user['lang_id']]:
-            orders = db.get_user_orders(db_user['id'])
-            lang_code = globals.LANGUAGE_CODE[db_user['lang_id']]
-            for order in orders:
-                text = f"{globals.ZAKAZ[db_user['lang_id']]} : #{order['id']}\n\n"
+            if context.user_data.get("carts", {}):
+                carts = context.user_data.get("carts")
+                text = "\n"
+                lang_code = globals.LANGUAGE_CODE[db_user['lang_id']]
                 total_price = 0
-                products = db.get_order_products(order['id'])
-                for product in products:
-                    total_price += product['product_price'] * product['amount']
-                    text += f"{product['amount']} x {product[f'product_name_{lang_code}']} ({product['product_price']}) {globals.SUM[db_user['lang_id']]}\n"
+                for cart, val in carts.items():
+                    product = db.get_product_for_cart(int(cart))
+                    text += f"{val} x {product[f'cat_name_{lang_code}']} {product[f'name_{lang_code}']}\n"
+                    total_price += product['price'] * val
+                text += f"\n{globals.ALL[db_user['lang_id']]}: {total_price} {globals.SUM[db_user['lang_id']]}"
 
-                text += f"\n{globals.BTN_KORZINKA[db_user['lang_id']]}: {total_price}"
-                update.message.reply_text(text=text)
+                update.message.reply_text(
+                    text=f"<b>Ma'lumotlarim:</b>\n\n"
+                         f"👤 <b>Ism-familiya:</b> {db_user['first_name']} {db_user['last_name']}\n"
+                         f"📞 <b>Telefon raqam:</b> {db_user['phone_number']} \n\n"
+                         f"📥 <b>Buyurtmalarim:</b> \n"
+                         f"{text}",
+                    parse_mode='HTML'
+                )
+
+            else:
+                update.message.reply_text(
+                    text=globals.NO_ZAKAZ[db_user['lang_id']])
+
+        elif message == globals.BTN_ABOUT_US[db_user['lang_id']]:
+            update.message.reply_text(
+                text=globals.ABOUT_COMPANY[db_user['lang_id']],
+                parse_mode="HTML"
+            )
+
+        elif message == globals.BTN_SETTINGS[db_user['lang_id']]:
+            # buttons = [
+            #     [KeyboardButton(text=globals.BTN_LANG_UZ), KeyboardButton(text=globals.BTN_LANG_RU)]
+            # ]
+            # update.message.reply_text(
+            #     text=globals.CHOOSE_LANG,
+            #     reply_markup=ReplyKeyboardMarkup(
+            #         keyboard=buttons,
+            #         resize_keyboard=True
+            #     )
+            # )
+            # context.user_data["state"] = globals.STATES["reg"]
+
 
     else:
         update.message.reply_text("Salom")
@@ -504,19 +537,6 @@ def contact_handler(update, context):
 def location_handler(update, context):
     db_user = db.get_user_by_chat_id(update.message.from_user.id)
     location = update.message.location
-    # payment_type = context.user_data.get("payment_type", None)
-    # db.create_order(db_user['id'], context.user_data.get("carts", {}), payment_type, location)
-    # db_order = db.get_user_orders(db_user['id'])
-    # db_products = db.get_order_products(db_order['id'])
-    # print(db_products)
-    # context.user_data['payment_type'] = None
-
-    # context.user_data['carts'] = {}
-    #
-    # update.message.reply_text(
-    #     text=globals.SENDED_TO_ADMIN[db_user['lang_id']]
-    # )
-    #
 
     categories = db.get_categories_by_parent()
     buttons = methods.send_category_buttons(categories=categories, lang_id=db_user["lang_id"])
@@ -535,7 +555,7 @@ def location_handler(update, context):
         text += f"\n{globals.ALL[db_user['lang_id']]}: {total_price} {globals.SUM[db_user['lang_id']]}"
 
     context.bot.send_message(
-        chat_id=697775505,
+        chat_id=ADMIN_ID,
         text=f"<b>Yangi buyurtma:</b>\n\n"
              f"👤 <b>Ism-familiya:</b> {db_user['first_name']} {db_user['last_name']}\n"
              f"📞 <b>Telefon raqam:</b> {db_user['phone_number']} \n\n"
@@ -546,7 +566,7 @@ def location_handler(update, context):
 
 
     context.bot.send_location(
-        chat_id=697775505,
+        chat_id=ADMIN_ID,
         latitude=float(location.latitude),
         longitude=float(location.longitude)
     )

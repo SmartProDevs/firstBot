@@ -96,3 +96,19 @@ SUM = {
     1: "so'm",
     2: "сум"
 }
+
+ABOUT_COMPANY = {
+    1: "Biz <b>Delx Group</b>miz! "
+         "\n\nBirgalikda biznesingizni rivojlantiramiz va uni "
+         "zamonaviy uslubda ommaga taqdim qilamiz!\n\n"
+         "<b>BIZ SIZ HAQINGIZDA QAYG'URAMIZ!!!</b>",
+    2: "Мы <b>Delx Group</b>!"
+       "\n\nМы будем развивать ваш бизнес вместе"
+       "и представляем публике в современном стиле!\n\n"
+       "<b>МЫ ЗАБОТИМСЯ О ВАС !!!</b>"
+}
+
+NO_ZAKAZ = {
+    1: "Siz hali birorta buyurtma bermadingiz!",
+    2: "Вы еще не разместили ни одного заказа!"
+}
