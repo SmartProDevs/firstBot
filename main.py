@@ -272,19 +272,25 @@ def message_handler(update, context):
                     resize_keyboard=True
                 )
             )
+            context.user_data["state"] = globals.STATES["settings"]
+    
+    elif state ==3:
+        if message == globals.BTN_LANG_UZ:
+            db.update_user_data(db_user['chat_id'], "lang_id", 1)
             context.user_data["state"] = globals.STATES["reg"]
+            check(update, context)
 
-            if message == globals.BTN_LANG_UZ:
-                db.update_user_data(db_user['chat_id'], "lang_id", 1)
+        elif message == globals.BTN_LANG_RU:
+            db.update_user_data(db_user['chat_id'], "lang_id", 2)
+            context.user_data["state"] = globals.STATES["reg"]
+            check(update, context)
 
-            elif message == globals.BTN_LANG_RU:
-                db.update_user_data(db_user['chat_id'], "lang_id", 2)
 
-            else:
-                update.message.reply_text(
-                    text=globals.TEXT_LANG_WARNING
-                )
-
+        else:
+            update.message.reply_text(
+                text=globals.TEXT_LANG_WARNING
+            )
+            
     else:
         update.message.reply_text("Salom")
 
