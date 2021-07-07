@@ -4,7 +4,8 @@ BTN_LANG_UZ = "O'zbek tili"
 BTN_LANG_RU = "Русский язык"
 STATES = {
     "reg": 1,
-    "menu": 2
+    "menu": 2,
+    "settings":3
 }
 LANGUAGE_CODE = {
     1: "uz",
